@@ -24,7 +24,7 @@ import api from '@/lib/api';
 import { useRouter } from 'next/navigation';
 
 const formSchema = z.object({
-  email: z.string().email({ message: 'Please enter a valid email.' }),
+  email: z.string({ message: 'Please enter a valid email.' }),
   password: z.string().min(1, { message: 'Password is required.' }),
 });
 
@@ -40,18 +40,12 @@ export default function LoginPage() {
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
     try {
-      const response = await api.post('/users/login', values);
-      const { token } = response.data;
-
-      // For now, we'll just log the token.
-      // In the next milestone, we will store this securely.
-      console.log('Login successful, token:', token);
-
-      // TODO: Redirect to the dashboard
-      // router.push('/dashboard');
+      await api.post('/users/login', values);
+      router.push('/dashboard');
+      console.log("Router push done, pathname:", window.location.pathname);
     } catch (error: any) {
       // TODO: Add error toast notification
-      console.error('Login failed:', error.response.data.message);
+      console.error('Login failed:', error.response?.data?.message);
     }
   }
 
