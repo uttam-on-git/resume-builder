@@ -22,3 +22,12 @@ export const findUserByEmail = async (email: string) => {
     where: { email: email.toLowerCase() },
   });
 };
+
+export const verifyPassword = async ({ email, password }: Pick<User, 'email' | 'password'>) => {
+  const user = await findUserByEmail(email);
+  if (!user) {
+    return false;
+  }
+  const isPasswordValid = await bcrypt.compare(password, user.password);
+  return isPasswordValid ? user : false;
+};
