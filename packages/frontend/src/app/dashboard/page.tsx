@@ -2,47 +2,72 @@
 
 import { useAuth } from '@/context/AuthContext';
 import { useRouter } from 'next/navigation';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { Button } from '@/components/ui/button';
 import api from '@/lib/api';
 
+interface ResumeData {
+  id: string;
+  title: string;
+  experiences: any[];
+  educations: any[];
+  skills: any[];
+}
+
 export default function DashboardPage() {
-  const { user, isLoading } = useAuth();
+  const { user, isLoading: isAuthLoading } = useAuth();
   const router = useRouter();
+  const [resumeData, setResumeData] = useState<ResumeData | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    if (!isLoading && !user) {
+    if (!isAuthLoading && !user) {
       router.push('/login');
     }
-  }, [user, isLoading, router]);
+  }, [user, isAuthLoading, router]);
 
-  const handleLogout = async () => {
-    // We'll build this logout endpoint on the backend next
-    // For now, let's just clear the state and redirect
-    try {
-        // Ideally you'd have a backend endpoint to invalidate the cookie
-        console.log("Logging out...");
-        router.push('/login');
-    } catch (error) {
-        console.error("Logout failed", error);
+  useEffect(() => {
+    if (user) {
+      const fetchResume = async () => {
+        try {
+          const response = await api.get('/resumes/my-resume');
+          setResumeData(response.data);
+        } catch (error) {
+          console.error('Failed to fetch resume data', error);
+        } finally {
+          setIsLoading(false);
+        }
+      };
+      fetchResume();
     }
-  };
+  }, [user]);
 
-  if (isLoading) {
-    return <div>Loading...</div>; // Or a spinner component
+  if (isAuthLoading || isLoading) {
+    return <div>Loading...</div>;
   }
 
   if (!user) {
-    return null; // Or a redirect component
+    return null;
   }
 
   return (
-    <div className="flex min-h-screen flex-col items-center justify-center">
-      <h1 className="text-3xl font-bold">Welcome to your Dashboard</h1>
-      <p className="mt-2 text-lg">You are logged in as: {user.email}</p>
-      <Button onClick={handleLogout} className="mt-4">
-        Logout
-      </Button>
+    <div className="container mx-auto p-4">
+      <div className="flex justify-between items-center mb-6">
+         <h1 className="text-3xl font-bold">Resume Editor</h1>
+         <Button>Save Changes</Button>
+      </div>
+
+      {/* We will build the form here */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+        <div className="p-4 border rounded-lg">
+          <h2 className="text-xl font-semibold mb-4">Editing Area</h2>
+          {/* Form will go here */}
+        </div>
+        <div className="p-4 border rounded-lg">
+          <h2 className="text-xl font-semibold mb-4">Live Preview</h2>
+          {/* Preview will go here */}
+        </div>
+      </div>
     </div>
   );
 }
