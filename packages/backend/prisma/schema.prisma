@@ -25,6 +25,13 @@ model User {
 model Resume {
   id       String   @id @default(cuid())
   title       String       @default("My Resume")
+  fullName    String?
+  email       String?
+  phoneNumber String?
+  address     String?
+  linkedIn    String?
+  website     String?
+  summary     String?      @db.Text
   user        User         @relation(fields: [userId], references: [id])
   userId      String       @unique
   experiences Experience[]
