@@ -19,4 +19,46 @@ model User {
   password  String
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+  resume Resume?
+}
+
+model Resume {
+  id       String   @id @default(cuid())
+  title       String       @default("My Resume")
+  user        User         @relation(fields: [userId], references: [id])
+  userId      String       @unique
+  experiences Experience[]
+  educations  Education[]
+  skills      Skill[]
+}
+
+model Experience {
+  id          String  @id @default(cuid())
+  jobTitle    String
+  company     String
+  location    String?
+  startDate   DateTime
+  endDate     DateTime?
+  description String?
+  resume      Resume  @relation(fields: [resumeId], references: [id])
+  resumeId    String
+}
+
+model Education {
+  id          String  @id @default(cuid())
+  school      String
+  degree      String
+  fieldOfStudy String?
+  startDate   DateTime
+  endDate     DateTime?
+  resume      Resume  @relation(fields: [resumeId], references: [id])
+  resumeId    String
+}
+
+model Skill {
+  id       String @id @default(cuid())
+  name     String
+  level    String?
+  resume   Resume @relation(fields: [resumeId], references: [id])
+  resumeId String
 }

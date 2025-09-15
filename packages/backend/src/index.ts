@@ -2,6 +2,7 @@ import dotenv from "dotenv"
 import cors from 'cors';
 import express, { Application, Request, Response } from "express"
 import userRoutes from './api/user/user.route'
+import resumeRoutes from './api/resume/resume.route'
 import cookieParser from "cookie-parser";
 dotenv.config()
 
@@ -23,6 +24,7 @@ app.get('/', (req: Request, res: Response) => {
 
 //routes
 app.use('/api/users', userRoutes)
+app.use('/api/resumes', resumeRoutes);
 
 app.listen(port, () => {
     console.log(`Server running on port ${port}.`)
