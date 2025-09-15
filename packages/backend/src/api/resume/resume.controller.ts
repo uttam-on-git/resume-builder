@@ -1,6 +1,7 @@
 import { Response } from 'express';
 import { AuthRequest } from '../../middleware/auth';
 import { getOrCreateResume } from './resume.service';
+import { updateResume } from './resume.service';
 
 export const getMyResumeHandler = async (req: AuthRequest, res: Response) => {
   const userId = req.user?.id;
@@ -14,5 +15,18 @@ export const getMyResumeHandler = async (req: AuthRequest, res: Response) => {
   } catch (error) {
     console.error(error);
     return res.status(500).json({ message: 'Internal Server Error' });
+  }
+};
+
+export const updateMyResumeHandler = async (req: AuthRequest, res: Response) => {
+  const userId = req.user?.id;
+  if (!userId) return res.status(403).json({ message: 'Unauthorized' });
+
+  try {
+    const updatedResume = await updateResume(userId, req.body);
+    return res.status(200).json(updatedResume);
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ message: 'Error updating resume' });
   }
 };
