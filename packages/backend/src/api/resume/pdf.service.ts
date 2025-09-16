@@ -37,7 +37,7 @@ export const generatePdfFromData = async (resumeData: any): Promise<Buffer> => {
   });
   const page = await browser.newPage();
   
-  await page.setContent(finalHtml, { waitUntil: 'networkidle0' });
+  await page.setContent(finalHtml, { waitUntil: 'domcontentloaded' });
 
   const pdfBuffer = await page.pdf({
     format: 'A4',
