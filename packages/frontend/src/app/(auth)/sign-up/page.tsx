@@ -3,6 +3,7 @@
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
+import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import {
   Form,
@@ -17,6 +18,7 @@ import {
   Card,
   CardContent,
   CardDescription,
+  CardFooter,
   CardHeader,
   CardTitle,
 } from '@/components/ui/card';
@@ -42,7 +44,7 @@ export default function SignUpPage() {
   async function onSubmit(values: z.infer<typeof formSchema>) {
     try {
       await api.post('/users/register', values);
-      toast.success('Registration successful');
+      toast.success('Registration successful! Please check your email to verify your account.');
       router.push('/login');
     } catch{
       toast.error('Registration failed');
@@ -85,12 +87,17 @@ export default function SignUpPage() {
                   </FormItem>
                 )}
               />
-              <Button type="submit" className="w-full">
+              <Button type="submit" className="w-full cursor-pointer">
                 Create Account
               </Button>
             </form>
           </Form>
         </CardContent>
+        <CardFooter className="flex justify-center">
+           <p className="text-sm text-gray-600">
+            {'Already have an account?'} <Link href="/login" className="text-blue-500 hover:underline">Login</Link>
+          </p>
+        </CardFooter>
       </Card>
     </div>
   );
