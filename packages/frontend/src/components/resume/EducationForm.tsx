@@ -36,7 +36,7 @@ export function EducationForm() {
         {fields.map((field, index) => (
           <div
             key={field.id}
-            className="p-4 border rounded-md relative space-y-2"
+            className="p-4 border rounded-md relative space-y-4"
           >
             <Button
               type="button"
@@ -48,40 +48,96 @@ export function EducationForm() {
               {" "}
               <Trash2 className="h-4 w-4" />{" "}
             </Button>
-            <FormField
-              control={control}
-              name={`educations.${index}.school`}
-              render={({ field }) => (
-                <FormItem>
-                  {" "}
-                  <FormLabel>School / University</FormLabel>{" "}
-                  <FormControl>
-                    <Input placeholder="State University" {...field} />
-                  </FormControl>{" "}
-                  <FormMessage />{" "}
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={control}
-              name={`educations.${index}.degree`}
-              render={({ field }) => (
-                <FormItem>
-                  {" "}
-                  <FormLabel>Degree & Field of Study</FormLabel>{" "}
-                  <FormControl>
-                    <Input placeholder="B.S. in Computer Science" {...field} />
-                  </FormControl>{" "}
-                  <FormMessage />{" "}
-                </FormItem>
-              )}
-            />
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <FormField
+                control={control}
+                name={`educations.${index}.school`}
+                render={({ field }) => (
+                  <FormItem>
+                    {" "}
+                    <FormLabel>School / University</FormLabel>{" "}
+                    <FormControl>
+                      <Input placeholder="State University" {...field} />
+                    </FormControl>{" "}
+                    <FormMessage />{" "}
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={control}
+                name={`educations.${index}.degree`}
+                render={({ field }) => (
+                  <FormItem>
+                    {" "}
+                    <FormLabel>Degree</FormLabel>{" "}
+                    <FormControl>
+                      <Input
+                        placeholder="B.S. in Computer Science"
+                        {...field}
+                      />
+                    </FormControl>{" "}
+                    <FormMessage />{" "}
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={control}
+                name={`educations.${index}.fieldOfStudy`}
+                render={({ field }) => (
+                  <FormItem>
+                    {" "}
+                    <FormLabel>Field of Study</FormLabel>{" "}
+                    <FormControl>
+                      <Input placeholder="Computer Science" {...field} />
+                    </FormControl>{" "}
+                    <FormMessage />{" "}
+                  </FormItem>
+                )}
+              />
+              <div />
+              <FormField
+                control={control}
+                name={`educations.${index}.startDate`}
+                render={({ field }) => (
+                  <FormItem>
+                    {" "}
+                    <FormLabel>Start Date</FormLabel>{" "}
+                    <FormControl>
+                      <Input type="date" {...field} />
+                    </FormControl>{" "}
+                    <FormMessage />{" "}
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={control}
+                name={`educations.${index}.endDate`}
+                render={({ field }) => (
+                  <FormItem>
+                    {" "}
+                    <FormLabel>End Date</FormLabel>{" "}
+                    <FormControl>
+                      <Input type="date" {...field} />
+                    </FormControl>{" "}
+                    <FormMessage />{" "}
+                  </FormItem>
+                )}
+              />
+            </div>
           </div>
         ))}
         <Button
           type="button"
           variant="outline"
-          onClick={() => append({ school: "", degree: "" })}
+          onClick={() =>
+            append({
+              school: "",
+              degree: "",
+              fieldOfStudy: "",
+              startDate: "",
+              endDate: "",
+            })
+          }
         >
           Add Education
         </Button>

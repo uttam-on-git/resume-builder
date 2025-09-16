@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{{fullName}}'s Resume</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            font-size: 10.5pt;
+            line-height: 1.5;
+            color: #334155; /* slate-700 */
+        }
+        .container {
+            max-width: 800px;
+            margin: auto;
+        }
+        h1 {
+            font-size: 2.25rem; /* text-4xl */
+            font-weight: 700; /* font-bold */
+            letter-spacing: -0.025em; 
+            color: #1e293b;
+            margin: 0;
+        }
+        h2 {
+            font-size: 1.125rem; /* text-lg */
+            font-weight: 600; /* font-semibold */
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: #334155;
+            border-bottom: 2px solid #cbd5e1;
+            padding-bottom: 4px;
+            margin-top: 1.5rem; /* mt-6 */
+            margin-bottom: 0.5rem; /* mb-2 */
+        }
+        h3 {
+            font-size: 1rem; /* text-base */
+            font-weight: 600; /* font-semibold */
+            color: #1e293b; /* slate-800 */
+            margin: 0;
+        }
+        p { margin: 0; }
+        .header {
+            text-align: center;
+            margin-bottom: 2rem; /* mb-8 */
+        }
+        .contact-info {
+            margin-top: 0.5rem; /* mt-2 */
+            font-size: 0.875rem; 
+            color: #64748b;
+        }
+        .links {
+            margin-top: 0.25rem;
+            font-size: 0.875rem;
+            color: #2563eb;
+        }
+        .links a {
+            color: #2563eb;
+            text-decoration: none;
+        }
+        .section {
+            margin-top: 1.5rem; /* mt-6 */
+        }
+        .entry {
+            margin-top: 1rem;
+        }
+        .entry-header, .sub-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
+        }
+        .entry-title {
+            font-size: 1rem;
+            font-weight: 600;
+            color: #1e293b;
+        }
+        .entry-dates {
+            font-size: 0.75rem;
+            font-weight: 500;
+            color: #64748b;
+        }
+        .entry-subtitle {
+            font-size: 0.875rem;
+            font-weight: 500;
+            color: #475569;
+        }
+        .entry-location {
+            font-size: 0.75rem;
+            color: #64748b;
+        }
+        .description {
+            margin-top: 0.25rem;
+            font-size: 0.875rem;
+            color: #475569;
+            white-space: pre-line;
+        }
+        .skills-list {
+            display: flex;
+            flex-wrap: wrap;
+        }
+        .skill-badge {
+            background-color: #e2e8f0;
+            color: #1e293b;
+            font-size: 0.75rem;
+            font-weight: 500;
+            padding: 4px 12px;
+            border-radius: 9999px;
+            margin-right: 8px;
+            margin-top: 8px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <h1>{{fullName}}</h1>
+            <p class="contact-info">
+                {{#if email}}{{email}}{{/if}}
+                {{#if phoneNumber}} | {{phoneNumber}}{{/if}}
+                {{#if address}} | {{address}}{{/if}}
+            </p>
+            <p class="links">
+                {{#if linkedIn}}<a href="{{linkedIn}}">LinkedIn</a>{{/if}}
+                {{#if website}} | <a href="{{website}}">Portfolio</a>{{/if}}
+            </p>
+        </header>
+
+        {{#if summary}}
+        <section>
+            <h2>Summary</h2>
+            <p class="description">{{summary}}</p>
+        </section>
+        {{/if}}
+
+        {{#if experiences}}
+        <section class="section">
+            <h2>Experience</h2>
+            {{#each experiences}}
+            <div class="entry">
+                <div class="entry-header">
+                    <h3 class="entry-title">{{this.jobTitle}}</h3>
+                    <span class="entry-dates">{{formatDate this.startDate}} - {{formatDate this.endDate}}</span>
+                </div>
+                <div class="sub-header">
+                    <p class="entry-subtitle">{{this.company}}</p>
+                    <p class="entry-location">{{this.location}}</p>
+                </div>
+                <p class="description">{{this.description}}</p>
+            </div>
+            {{/each}}
+        </section>
+        {{/if}}
+        
+        {{#if educations}}
+        <section class="section">
+            <h2>Education</h2>
+            {{#each educations}}
+            <div class="entry">
+                <div class="entry-header">
+                    <h3 class="entry-title">{{this.school}}</h3>
+                    <span class="entry-dates">{{formatDate this.startDate}} - {{formatDate this.endDate}}</span>
+                </div>
+                <p class="entry-subtitle">{{this.degree}}{{#if this.fieldOfStudy}}, {{this.fieldOfStudy}}{{/if}}</p>
+            </div>
+            {{/each}}
+        </section>
+        {{/if}}
+        
+        {{#if skills}}
+        <section class="section">
+            <h2>Skills</h2>
+            <div class="skills-list">
+                {{#each skills}}
+                <span class="skill-badge">{{this.name}}</span>
+                {{/each}}
+            </div>
+        </section>
+        {{/if}}
+    </div>
+</body>
+</html>
