@@ -78,18 +78,30 @@ export default function DashboardPage() {
       await api.put('/resumes/my-resume', values);
       toast.success('Resume saved successfully!');
       clearDraft();
-    } catch (error) {
+    } catch{
       toast.error('Failed to save resume. Please try again.');
     }
   }
 
+  useEffect(() => {
+    if (!user && !isAuthLoading) {
+      router.push("/login");
+    }
+  }, [user, isAuthLoading, router]);
+
   if (isAuthLoading) {
-    return <div className="flex h-screen items-center justify-center">Loading session...</div>;
+    return (
+      <div className="flex h-screen items-center justify-center">
+        Loading session...
+      </div>
+    );
   }
+
+  // while redirecting, render nothing
   if (!user && !isAuthLoading) {
-    router.push('/login');
     return null;
   }
+
 
   return (
     <Form {...form}>

@@ -24,7 +24,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       try {
         // cookie is sent automatically by the browser
         const response = await api.get('/users/me');
-        setUser(response.data.user);
+        setUser(response.data?.user);
       } catch (error) {
         setUser(null);
       } finally {

@@ -22,6 +22,7 @@ import {
 } from '@/components/ui/card';
 import api from '@/lib/api';
 import { useRouter } from 'next/navigation';
+import { toast } from 'sonner';
 
 const formSchema = z.object({
   email: z.string({ message: 'Please enter a valid email.' }),
@@ -41,11 +42,10 @@ export default function SignUpPage() {
   async function onSubmit(values: z.infer<typeof formSchema>) {
     try {
       await api.post('/users/register', values);
-      // TODO: Add success toast notification
+      toast.success('Registration successful');
       router.push('/login');
-    } catch (error: any) {
-      // TODO: Add error toast notification
-      console.error('Registration failed:', error.response.data.message);
+    } catch{
+      toast.error('Registration failed');
     }
   }
 

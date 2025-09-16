@@ -44,8 +44,8 @@ export default function LoginPage() {
       await api.post('/users/login', values);
       router.push('/dashboard');
       console.log("Router push done, pathname:", window.location.pathname);
-    } catch (error: any) {
-      toast.error('Login failed:');
+    } catch{
+      toast.error('Login failed');
     }
   }
 

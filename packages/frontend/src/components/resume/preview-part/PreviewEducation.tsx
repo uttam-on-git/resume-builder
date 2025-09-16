@@ -17,7 +17,10 @@ export function PreviewEducation({ data }: { data: Partial<ResumeFormValues> }) 
                 <span>{formatDate(edu.startDate)}</span> - <span>{formatDate(edu.endDate)}</span>
               </div>
             </div>
-            <p className="text-sm text-slate-600">{edu.degree}{edu.fieldOfStudy && `, ${edu.fieldOfStudy}`}</p>
+            <p className="text-sm text-slate-600">
+              {edu.degree}
+              {edu.fieldOfStudy ? `, ${edu.fieldOfStudy}` : ""}
+            </p>
           </div>
         ))}
       </div>
