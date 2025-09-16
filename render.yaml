@@ -1,0 +1,16 @@
+services:
+  - type: web
+    name: resume-builder-backend
+    env: node
+    plan: free
+    buildCommand: "pnpm install --filter backend && pnpm --filter backend build"
+    startCommand: "pnpm --filter backend start"
+    envVars:
+      - key: DATABASE_URL
+      - key: JWT_SECRET
+        generateValue: true
+      - key: PUPPETEER_EXECUTABLE_PATH
+        value: /usr/bin/google-chrome-stable
+    buildpacks:
+      - heroku/nodejs
+      - https://github.com/heroku/heroku-buildpack-google-chrome
