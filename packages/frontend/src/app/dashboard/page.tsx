@@ -67,7 +67,7 @@ export default function DashboardPage() {
       window.URL.revokeObjectURL(url);
       
       toast.success("Download started!");
-    } catch (error) {
+    } catch{
       toast.error("Failed to download PDF.");
     }
   };
