@@ -22,6 +22,7 @@ import {
 } from '@/components/ui/card';
 import api from '@/lib/api';
 import { useRouter } from 'next/navigation';
+import { toast } from 'sonner';
 
 const formSchema = z.object({
   email: z.string({ message: 'Please enter a valid email.' }),
@@ -44,8 +45,7 @@ export default function LoginPage() {
       router.push('/dashboard');
       console.log("Router push done, pathname:", window.location.pathname);
     } catch (error: any) {
-      // TODO: Add error toast notification
-      console.error('Login failed:', error.response?.data?.message);
+      toast.error('Login failed:');
     }
   }
 
