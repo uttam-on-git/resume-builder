@@ -89,8 +89,10 @@ export default function DashboardPage() {
   );
 
   useEffect(() => {
-    if (!user && !isAuthLoading) {
-      router.push('/login');
+    if (isAuthLoading) return;
+
+    if (!user) {
+      router.replace('/login');
     }
   }, [user, isAuthLoading, router]);
 

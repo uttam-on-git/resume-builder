@@ -27,6 +27,8 @@ import { useRouter } from 'next/navigation';
 import { toast } from 'sonner';
 import { useState } from 'react';
 import { isAxiosError } from 'axios';
+import { useAuth } from '@/context/AuthContext';
+
 
 const formSchema = z.object({
   email: z.string({ message: 'Please enter a valid email.' }),
@@ -35,6 +37,7 @@ const formSchema = z.object({
 
 export default function LoginPage() {
   const router = useRouter();
+  const { login } = useAuth();
   const [isLoading, setIsLoading] = useState(false);
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -46,7 +49,7 @@ export default function LoginPage() {
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
     try {
-      await api.post('/users/login', values);
+      await login(values);
       toast.success('Login successful!');
       router.push('/dashboard');
     } catch (error) {
