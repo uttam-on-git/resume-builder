@@ -26,6 +26,7 @@ import api from '@/lib/api';
 import { useRouter } from 'next/navigation';
 import { toast } from 'sonner';
 import { useState } from 'react';
+import { isAxiosError } from 'axios';
 
 const formSchema = z.object({
   email: z.string({ message: 'Please enter a valid email.' }),
@@ -48,8 +49,8 @@ export default function LoginPage() {
       await api.post('/users/login', values);
       toast.success('Login successful!');
       router.push('/dashboard');
-    } catch (error: any) {
-      if (error.response?.status === 401) {
+    } catch (error) {
+      if (isAxiosError(error) && error.response?.status === 401) {
         toast.error('Invalid email or password.');
       } else {
         toast.error('An unexpected error occurred. Please try again.');

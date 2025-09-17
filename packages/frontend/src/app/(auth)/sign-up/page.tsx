@@ -26,6 +26,7 @@ import api from '@/lib/api';
 import { useRouter } from 'next/navigation';
 import { toast } from 'sonner';
 import { useState } from 'react';
+import { isAxiosError } from 'axios';
 
 const formSchema = z.object({
   email: z.string({ message: 'Please enter a valid email.' }),
@@ -49,8 +50,8 @@ export default function SignUpPage() {
       await api.post('/users/register', values);
       toast.success('Registration successful! Please check your email to verify your account.');
       router.push('/login');
-    } catch (error: any){
-      if (error.response?.status === 409) {
+    } catch (error){
+      if (isAxiosError(error) && error.response?.status === 409) {
           toast.error('A user with this email already exists.');
       } else {
           toast.error('Registration failed. Please try again.');
