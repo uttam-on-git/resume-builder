@@ -1,52 +1,42 @@
-# Resume & Portfolio Builder
+# **Resume & Portfolio Builder**
 
-This is a full-stack web application designed to help users create, customize, and export professional resumes. It features a decoupled architecture with a Node.js/Express.js REST API backend and a Next.js/React frontend.
+![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)
+![TypeScript](https://img.shields.io/badge/TypeScript-3178C6?logo=typescript&logoColor=white)
+![Node.js](https://img.shields.io/badge/Node.js-339933?logo=nodedotjs&logoColor=white)
+![Express.js](https://img.shields.io/badge/Express.js-000000?logo=express&logoColor=white)
+![PostgreSQL](https://img.shields.io/badge/PostgreSQL-4169E1?logo=postgresql&logoColor=white)
+![Prisma](https://img.shields.io/badge/Prisma-2D3748?logo=prisma&logoColor=white)
+![React](https://img.shields.io/badge/React-61DAFB?logo=react&logoColor=white)
+![Next.js](https://img.shields.io/badge/Next.js-000000?logo=nextdotjs&logoColor=white)
+![Tailwind CSS](https://img.shields.io/badge/Tailwind%20CSS-38B2AC?logo=tailwind-css&logoColor=white)
 
-## Core Features
 
--   **User Authentication**: Secure JWT-based authentication for user sign-up and login.
--   **Modular Resume Editor**: A dynamic form interface to edit personal details, experience, education, and skills.
--   **Live Preview**: A real-time preview pane that updates as the user fills out the form.
--   **Persistent Drafts**: Unsaved form changes are automatically saved to the browser's local storage and restored on page refresh.
--   **PDF Export**: Server-side generation of a professionally formatted PDF from the live form data.
+This full-stack web application helps users create, customize, and export professional resumes. It features a Node.js/Express.js backend and a Next.js/React frontend.
 
-## Tech Stack
+## **Core Features**
 
-### Backend
--   **Runtime**: Node.js
--   **Framework**: Express.js
--   **Language**: TypeScript
--   **Database**: PostgreSQL
--   **ORM**: Prisma
--   **Authentication**: JSON Web Tokens (JWT) via httpOnly cookies
--   **Validation**: Zod
--   **PDF Generation**: Puppeteer
+* **User Authentication**: Secure JWT-based authentication.
+* **Modular Resume Editor**: A dynamic form to edit personal details, experience, education, and skills.
+* **Live Preview**: A real-time preview that updates as you type.
+* **Persistent Drafts**: Unsaved changes are automatically saved to local storage.
+* **PDF Export**: Server-side generation of a professional PDF from your resume data.
 
-### Frontend
--   **Framework**: Next.js (App Router)
--   **Language**: TypeScript
--   **Styling**: Tailwind CSS
--   **UI Components**: shadcn/ui
--   **Forms**: React Hook Form with Zod for validation
--   **API Client**: Axios
+## **Tech Stack**
 
-## Project Structure
+**Backend**: Node.js, Express.js, TypeScript, PostgreSQL, Prisma, JWT, Zod, Puppeteer
+**Frontend**: Next.js, React, TypeScript, Tailwind CSS, shadcn/ui, React Hook Form, Zod, Axios
 
-This project is a monorepo managed with `pnpm` workspaces.
+## **Getting Started**
 
--   `packages/backend`: Contains the Node.js REST API.
--   `packages/frontend`: Contains the Next.js client application.
+### **Prerequisites**
 
-## Getting Started
+* Node.js (v18 or later)
+* `pnpm` (`npm install -g pnpm`)
+* Docker and Docker Compose
 
-### Prerequisites
--   Node.js (v18 or later)
--   `pnpm` ( `npm install -g pnpm` )
--   Docker and Docker Compose
+### **Local Development**
 
-### Local Development Setup
-
-1.  **Clone the repository:**
+1.  **Clone the repository**:
     ```bash
     git clone https://github.com/uttam-on-git/resume-builder.git
     cd resume-builder
@@ -57,52 +47,74 @@ This project is a monorepo managed with `pnpm` workspaces.
     pnpm install
     ```
 
-3.  **Set up environment variables:**
-    -   Create a `.env` file in `packages/backend`.
-    -   **`packages/backend/.env`**:
+3.  **Set up environment variables**:
+    * Create a `.env` file in `packages/backend`.
+    * **`packages/backend/.env`**:
         ```
         DATABASE_URL="postgresql://myuser:mypassword@localhost:5432/resumedb?schema=public"
         JWT_SECRET="your-super-secret-and-long-random-string"
+        FRONTEND_URL="http://localhost:3000"
+        SMTP_HOST=smtp.gmail.com
+        SMTP_PORT=587
+        SMTP_USER=your-email@gmail.com
+        SMTP_PASS="your-gmail-app-password"
         ```
-    -   The frontend does not require any environment variables for local development as the API URL is hardcoded in the Axios instance.
 
-4.  **Start the database** using Docker Compose from the root directory:
+4.  **Start the database** using Docker Compose:
     ```bash
     docker-compose up -d
     ```
 
-5.  **Apply database migrations:**
+5.  **Apply database migrations**:
     ```bash
-    pnpm --filter backend prisma migrate dev
+    pnpm --filter backend exec prisma migrate dev
     ```
 
-6.  **Run the development servers:** Open two separate terminals from the root directory.
-    -   **Terminal 1 (Backend):**
+6.  **Run the development servers** in two separate terminals:
+
+    * **Backend**:
         ```bash
-    pnpm dev:backend
+        pnpm dev:backend
         ```
-    -   **Terminal 2 (Frontend):**
+
+    * **Frontend**:
         ```bash
-    pnpm dev:frontend
+        pnpm dev:frontend
         ```
 
 The frontend will be available at `http://localhost:3000` and the backend at `http://localhost:8000`.
 
-## API Endpoints
+## **API Endpoints**
 
-All endpoints are prefixed with `/api`. Protected routes require a valid JWT cookie.
+All endpoints are prefixed with `/api`.
 
-| Method | Endpoint                      | Description                           | Protected |
-| :----- | :---------------------------- | :------------------------------------ | :-------- |
-| `POST` | `/users/register`             | Register a new user.                  | No        |
-| `POST` | `/users/login`                | Log in a user and set JWT cookie.     | No        |
-| `GET`  | `/users/me`                   | Get the current authenticated user.   | Yes       |
-| `GET`  | `/resumes/my-resume`          | Get the user's saved resume data.     | Yes       |
-| `PUT`  | `/resumes/my-resume`          | Update the user's resume data.        | Yes       |
-| `POST` | `/resumes/preview/download`   | Generate a PDF from live form data.   | Yes       |
+| Method | Endpoint | Description | Protected |
+| :--- | :--- | :--- | :--- |
+| `POST` | `/users/register` | Register a new user. | No |
+| `POST` | `/users/login` | Log in a user and set JWT cookie. | No |
+| `POST` | `/users/logout` | Log out a user and clear JWT cookie. | No |
+| `GET` | `/users/me` | Get the current authenticated user. | Yes |
+| `POST` | `/users/request-password-reset`| Request a password reset email. | No |
+| `POST` | `/users/reset-password` | Reset the user's password with a token. | No |
+| `GET` | `/resumes/my-resume` | Get the user's saved resume data. | Yes |
+| `PUT` | `/resumes/my-resume` | Update the user's resume data. | Yes |
+| `GET` | `/resumes/my-resume/download`| Generate and download a PDF of the resume. | Yes |
 
-## Future Work
+## **Contributing**
 
--   Implementation of a full Portfolio builder section.
--   Guest mode for using the editor without an account.
--   Password recovery functionality.
+Contributions are welcome! Please follow these steps to contribute:
+
+1.  **Fork the repository**.
+2.  **Create a new branch**:
+    ```bash
+    git checkout -b feature/your-feature-name
+    ```
+3.  **Make your changes** and commit them with a descriptive message:
+    ```bash
+    git commit -m "feat: implement new feature"
+    ```
+4.  **Push to your branch**:
+    ```bash
+    git push origin feature/your-feature-name
+    ```
+5.  **Create a pull request**

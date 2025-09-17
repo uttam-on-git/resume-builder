@@ -29,7 +29,28 @@ export function usePersistentForm<TFieldValues extends FieldValues>({
         api
           .get('/resumes/my-resume')
           .then((response) => {
-            form.reset(response.data);
+            const resumeData = response.data;
+
+            const formatDateForInput = (dateString: string | null | undefined): string => {
+              if (!dateString) return '';
+              return dateString.split('T')[0];
+            };
+
+            const formattedData = {
+              ...resumeData,
+              experiences: resumeData.experiences.map((exp: any) => ({
+                ...exp,
+                startDate: formatDateForInput(exp.startDate),
+                endDate: formatDateForInput(exp.endDate),
+              })),
+              educations: resumeData.educations.map((edu: any) => ({
+                ...edu,
+                startDate: formatDateForInput(edu.startDate),
+                endDate: formatDateForInput(edu.endDate),
+              })),
+            };
+
+            form.reset(formattedData);
             toast.success('Resume data loaded!');
           })
           .catch(() => {
