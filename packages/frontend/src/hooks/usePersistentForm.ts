@@ -11,6 +11,16 @@ interface UsePersistentFormProps<TFieldValues extends FieldValues> {
   userId?: string;
 }
 
+interface Experience {
+  startDate: string | null | undefined;
+  endDate: string | null | undefined;
+}
+
+interface Education {
+  startDate: string | null | undefined;
+  endDate: string | null | undefined;
+}
+
 export function usePersistentForm<TFieldValues extends FieldValues>({
   form,
   localStorageKey,
@@ -38,12 +48,12 @@ export function usePersistentForm<TFieldValues extends FieldValues>({
 
             const formattedData = {
               ...resumeData,
-              experiences: resumeData.experiences.map((exp: any) => ({
+              experiences: resumeData.experiences.map((exp: Experience) => ({
                 ...exp,
                 startDate: formatDateForInput(exp.startDate),
                 endDate: formatDateForInput(exp.endDate),
               })),
-              educations: resumeData.educations.map((edu: any) => ({
+              educations: resumeData.educations.map((edu: Education) => ({
                 ...edu,
                 startDate: formatDateForInput(edu.startDate),
                 endDate: formatDateForInput(edu.endDate),

@@ -22,7 +22,6 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card';
-import api from '@/lib/api';
 import { useRouter } from 'next/navigation';
 import { toast } from 'sonner';
 import { useState } from 'react';

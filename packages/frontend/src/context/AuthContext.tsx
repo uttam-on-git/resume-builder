@@ -4,12 +4,10 @@ import { createContext, useContext, useState, useEffect, ReactNode, useCallback 
 import api from '@/lib/api';
 import { z } from 'zod';
 
-const loginSchema = z.object({
-  email: z.string().email(),
-  password: z.string(),
-});
-
-type LoginData = z.infer<typeof loginSchema>;
+type LoginData = z.infer<z.ZodObject<{
+  email: z.ZodString;
+  password: z.ZodString;
+}>>;
 
 interface User {
   id: string;
@@ -20,7 +18,7 @@ interface AuthContextType {
   user: User | null;
   isLoading: boolean;
   login: (data: LoginData) => Promise<void>;
-  logout: () => Promise<void>;
+  logout: () => void;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
