@@ -87,7 +87,7 @@ export default function SignUpPage() {
                   </FormItem>
                 )}
               />
-              <Button type="submit" className="w-full cursor-pointer">
+              <Button type="submit" className="w-full">
                 Create Account
               </Button>
             </form>

@@ -93,7 +93,7 @@ export default function LoginPage() {
                   </Link>
                 </div>
               </div>
-              <Button type="submit" className="w-full cursor-pointer">
+              <Button type="submit" className="w-full">
                 Login
               </Button>
             </form>

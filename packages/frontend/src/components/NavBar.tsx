@@ -89,14 +89,14 @@ export function Navbar() {
                 </Button>
               </div>
             ) : (
-              <Button onClick={() => router.push('/dashboard')} className='cursor-pointer'>Dashboard</Button>
+              <Button onClick={() => router.push('/dashboard')}>Dashboard</Button>
             )
           ) : (
             <>
-              <Button variant="ghost" className='cursor-pointer' onClick={() => router.push('/login')}>
+              <Button variant="ghost" onClick={() => router.push('/login')}>
                 Login
               </Button>
-              <Button className='cursor-pointer' onClick={() => router.push('/sign-up')}>Sign Up</Button>
+              <Button onClick={() => router.push('/sign-up')}>Sign Up</Button>
             </>
           )}
         </div>

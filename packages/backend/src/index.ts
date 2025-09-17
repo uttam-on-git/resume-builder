@@ -9,11 +9,19 @@ dotenv.config()
 const app: Application = express()
 const port = process.env.PORT || 8000
 
+//LOGGING MIDDLEWARE
+app.use((req: Request, res: Response, next) => {
+  console.log(`Incoming Request: ${req.method} ${req.path}`);
+  next();
+});
+
 //middleware
 app.use(cookieParser())
 app.use(cors({
   origin: process.env.FRONTEND_URL,
   credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization'],
 }));
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
