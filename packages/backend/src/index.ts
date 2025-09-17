@@ -4,6 +4,7 @@ import express, { Application, Request, Response } from "express"
 import userRoutes from './api/user/user.route'
 import resumeRoutes from './api/resume/resume.route'
 import cookieParser from "cookie-parser";
+import { errorHandler } from './middleware/errorHandler';
 dotenv.config()
 
 const app: Application = express()
@@ -14,7 +15,7 @@ app.use((req: Request, res: Response, next) => {
   console.log(`Incoming Request: ${req.method} ${req.path}`);
   next();
 });
-
+app.use(errorHandler);
 //middleware
 app.use(cookieParser())
 app.use(cors({

@@ -3,7 +3,8 @@
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { toast } from 'sonner';
-import { useEffect, useCallback } from 'react'; // Import useCallback
+import { useEffect, useCallback } from 'react';
+import { useDebounce } from 'use-debounce';
 
 import { ResumeFormValues, resumeSchema } from '@/components/resume/ZodSchema';
 import { useAuth } from '@/context/AuthContext';
@@ -47,6 +48,7 @@ export default function DashboardPage() {
   });
 
   const watchedData = form.watch();
+  const [debouncedData] = useDebounce(watchedData, 500);
 
   // Wrapped handleDownload in useCallback for stability
   const handleDownload = useCallback(async () => {
@@ -132,7 +134,7 @@ export default function DashboardPage() {
                   Live Preview
                 </h2>
                 <div className="shadow-lg">
-                  <ResumePreview data={watchedData} />
+                  <ResumePreview data={debouncedData} />
                 </div>
               </div>
             </div>

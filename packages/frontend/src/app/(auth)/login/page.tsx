@@ -25,6 +25,7 @@ import {
 import api from '@/lib/api';
 import { useRouter } from 'next/navigation';
 import { toast } from 'sonner';
+import { useState } from 'react';
 
 const formSchema = z.object({
   email: z.string({ message: 'Please enter a valid email.' }),
@@ -33,6 +34,7 @@ const formSchema = z.object({
 
 export default function LoginPage() {
   const router = useRouter();
+  const [isLoading, setIsLoading] = useState(false);
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -44,9 +46,16 @@ export default function LoginPage() {
   async function onSubmit(values: z.infer<typeof formSchema>) {
     try {
       await api.post('/users/login', values);
+      toast.success('Login successful!');
       router.push('/dashboard');
-    } catch {
-      toast.error('Login failed');
+    } catch (error: any) {
+      if (error.response?.status === 401) {
+        toast.error('Invalid email or password.');
+      } else {
+        toast.error('An unexpected error occurred. Please try again.');
+      }
+    } finally {
+      setIsLoading(false);
     }
   }
 
@@ -93,8 +102,8 @@ export default function LoginPage() {
                   </Link>
                 </div>
               </div>
-              <Button type="submit" className="w-full">
-                Login
+              <Button type="submit" className="w-full" disabled={isLoading}>
+                {isLoading ? 'Logging in...' : 'Login'}
               </Button>
             </form>
           </Form>

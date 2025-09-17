@@ -1,10 +1,10 @@
-import { Request, Response } from "express";
+import { NextFunction, Request, Response } from "express";
 import { findUserByEmail, requestPasswordReset, resetPassword, verifyEmail, verifyPassword } from "./user.service";
 import { createUser } from "./user.service";
 import jwt from "jsonwebtoken"
 import { AuthRequest } from "../../middleware/auth";
 
-export const registerUserHandler = async (req: Request, res: Response) => {
+export const registerUserHandler = async (req: Request, res: Response, next: NextFunction) => {
     const { email, password } = req.body
 
     try {
@@ -22,7 +22,7 @@ export const registerUserHandler = async (req: Request, res: Response) => {
         const { password: _, ...userWithoutPassword } = newUser
 
         return res.status(201).json({
-            message: 'User registered successfully',
+            message: 'User registered successfully. Please check your email to verify your account.',
             user: userWithoutPassword,
         });
     } catch (error) {
