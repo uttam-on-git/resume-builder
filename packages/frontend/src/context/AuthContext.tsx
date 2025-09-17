@@ -20,6 +20,7 @@ interface AuthContextType {
   user: User | null;
   isLoading: boolean;
   login: (data: LoginData) => Promise<void>;
+  logout: () => Promise<void>;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -48,8 +49,13 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     await fetchUser();
   };
 
+  const logout = async () => {
+    await api.post('/users/logout');
+    setUser(null);
+  };
+
   return (
-    <AuthContext.Provider value={{ user, isLoading, login }}>
+    <AuthContext.Provider value={{ user, isLoading, login, logout }}>
       {children}
     </AuthContext.Provider>
   );

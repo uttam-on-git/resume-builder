@@ -4,3 +4,7 @@ node_modules
 
 /src/generated/prisma
 packages/backend/.cache/
+
+# Puppeteer Cache
+# This directory contains the downloaded browser binaries
+.cache/

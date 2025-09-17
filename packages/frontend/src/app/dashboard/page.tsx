@@ -50,8 +50,22 @@ export default function DashboardPage() {
   const watchedData = form.watch();
   const [debouncedData] = useDebounce(watchedData, 500);
 
-  // Wrapped handleDownload in useCallback for stability
+  const onSubmit = useCallback(
+    async (values: ResumeFormValues) => {
+      toast.info('Saving your resume...');
+      try {
+        await api.put('/resumes/my-resume', values);
+        toast.success('Resume saved successfully!');
+        clearDraft();
+      } catch {
+        toast.error('Failed to save resume. Please try again.');
+      }
+    },
+    [clearDraft]
+  );
+
   const handleDownload = useCallback(async () => {
+    await form.handleSubmit(onSubmit)();
     toast.info('Generating your PDF...');
     try {
       const response = await api.get('/resumes/my-resume/download', {
@@ -71,22 +85,7 @@ export default function DashboardPage() {
     } catch {
       toast.error('Failed to download PDF.');
     }
-  }, []);
-
-  // Wrapped onSubmit in useCallback for stability
-  const onSubmit = useCallback(
-    async (values: ResumeFormValues) => {
-      toast.info('Saving your resume...');
-      try {
-        await api.put('/resumes/my-resume', values);
-        toast.success('Resume saved successfully!');
-        clearDraft();
-      } catch {
-        toast.error('Failed to save resume. Please try again.');
-      }
-    },
-    [clearDraft]
-  );
+  }, [form, onSubmit]);
 
   useEffect(() => {
     if (isAuthLoading) return;
