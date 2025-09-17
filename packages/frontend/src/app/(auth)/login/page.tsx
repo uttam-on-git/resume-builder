@@ -27,6 +27,7 @@ import { toast } from 'sonner';
 import { useState } from 'react';
 import { isAxiosError } from 'axios';
 import { useAuth } from '@/context/AuthContext';
+import { Separator } from '@/components/ui/separator';
 
 
 const formSchema = z.object({
@@ -36,8 +37,8 @@ const formSchema = z.object({
 
 export default function LoginPage() {
   const router = useRouter();
-  const { login } = useAuth();
-  const [isLoading, setIsLoading] = useState(false);
+  const { login, enterGuestMode, isLoading } = useAuth();
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -46,19 +47,25 @@ export default function LoginPage() {
     },
   });
 
+  const handleGuestLogin = () => {
+    enterGuestMode();
+    router.push('/dashboard');
+  };
+
   async function onSubmit(values: z.infer<typeof formSchema>) {
+    setIsSubmitting(true);
     try {
       await login(values);
       toast.success('Login successful!');
       router.push('/dashboard');
     } catch (error) {
       if (isAxiosError(error) && error.response?.status === 401) {
-        toast.error('Invalid email or password.');
+        toast.error(error.response.data.message || 'Invalid email or password.');
       } else {
         toast.error('An unexpected error occurred. Please try again.');
       }
     } finally {
-      setIsLoading(false);
+      setIsSubmitting(false);
     }
   }
 
@@ -105,11 +112,15 @@ export default function LoginPage() {
                   </Link>
                 </div>
               </div>
-              <Button type="submit" className="w-full" disabled={isLoading}>
-                {isLoading ? 'Logging in...' : 'Login'}
+              <Button type="submit" className="w-full" disabled={isSubmitting || isLoading}>
+                {isSubmitting || isLoading ? 'Logging in...' : 'Login'}
               </Button>
             </form>
           </Form>
+          <Separator className="my-6" />
+          <Button variant="outline" className="w-full" onClick={handleGuestLogin} disabled={isLoading}>
+            Continue as Guest
+          </Button>
         </CardContent>
         <CardFooter className="flex justify-center pt-4">
           <p className="text-sm text-gray-600">

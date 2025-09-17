@@ -51,7 +51,7 @@ export function AuthActions({ user, pathname, handleLogout }: AuthActionsProps) 
           </Button>
         </div>
         {/* Mobile Dashboard Actions */}
-        <div className="md:hidden">
+        <div className="md:hidden pr-5">
           <Sheet>
             <SheetTrigger asChild>
               <Button>Actions</Button>

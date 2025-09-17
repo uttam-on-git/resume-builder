@@ -41,6 +41,10 @@ export const loginUserHandler = async (req: Request, res: Response) => {
       return res.status(401).json({ message: 'Invalid email or password' });
     }
 
+    if (!user.emailVerified) {
+      return res.status(401).json({ message: 'Please verify your email before logging in.' });
+    }
+
     const jwtSecret = process.env.JWT_SECRET;
     if (!jwtSecret) {
       throw new Error('JWT_SECRET not defined in environment variables');

@@ -27,15 +27,16 @@ export function usePersistentForm<TFieldValues extends FieldValues>({
   userId,
 }: UsePersistentFormProps<TFieldValues>) {
   const dataLoadedRef = useRef(false);
+  const userSpecificKey = userId ? `${localStorageKey}_${userId}` : null;
 
   useEffect(() => {
     if (userId && !dataLoadedRef.current) {
-      const savedDraft = localStorage.getItem(localStorageKey);
+      const savedDraft = userSpecificKey ? localStorage.getItem(userSpecificKey) : null;
 
       if (savedDraft) {
         toast.info("Loaded your unsaved draft.");
         form.reset(JSON.parse(savedDraft));
-      } else {
+      } else if (userId !== 'guest') {
         api
           .get('/resumes/my-resume')
           .then((response) => {
@@ -69,19 +70,21 @@ export function usePersistentForm<TFieldValues extends FieldValues>({
       }
       dataLoadedRef.current = true;
     }
-  }, [userId, form, localStorageKey]);
+  }, [userId, userSpecificKey, form]);
 
   useEffect(() => {
     const subscription = form.watch((value) => {
-      if (dataLoadedRef.current) {
-        localStorage.setItem(localStorageKey, JSON.stringify(value));
+      if (dataLoadedRef.current && userSpecificKey) {
+        localStorage.setItem(userSpecificKey, JSON.stringify(value));
       }
     });
     return () => subscription.unsubscribe();
-  }, [form, localStorageKey]);
+  }, [form, userSpecificKey]);
 
   const clearDraft = () => {
-    localStorage.removeItem(localStorageKey);
+    if (userSpecificKey) {
+      localStorage.removeItem(userSpecificKey);
+    }
   };
 
   return { clearDraft };

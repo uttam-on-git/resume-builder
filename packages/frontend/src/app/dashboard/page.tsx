@@ -18,9 +18,25 @@ import { ExperienceForm } from '@/components/resume/ExperienceForm';
 import { EducationForm } from '@/components/resume/EducationForm';
 import { SkillsForm } from '@/components/resume/SkillsForm';
 import { ResumePreview } from '@/components/resume/ResumePreview';
+import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
+import { Terminal } from 'lucide-react';
+
+// guest mode alert banner.
+const GuestModeAlert = () => (
+  <Alert className="mb-6">
+    <Terminal className="h-4 w-4" />
+    <AlertTitle>You are in Guest Mode!</AlertTitle>
+    <AlertDescription className="flex flex-col sm:flex-row items-center justify-between">
+      <span>
+        To save your progress to an account and download your resume, please sign up.
+      </span>
+    </AlertDescription>
+  </Alert>
+);
+
 
 export default function DashboardPage() {
-  const { user, isLoading: isAuthLoading } = useAuth();
+  const { user, isGuest, isLoading: isAuthLoading } = useAuth();
   const router = useRouter();
 
   const form = useForm<ResumeFormValues>({
@@ -40,11 +56,13 @@ export default function DashboardPage() {
     },
     mode: 'onChange',
   });
+  
+  const userId = isGuest ? 'guest' : user?.id;
 
   const { clearDraft } = usePersistentForm({
     form,
     localStorageKey: 'resumeDraft',
-    userId: user?.id,
+    userId,
   });
 
   const watchedData = form.watch();
@@ -52,6 +70,10 @@ export default function DashboardPage() {
 
   const onSubmit = useCallback(
     async (values: ResumeFormValues) => {
+      if (isGuest) {
+        toast.info('Changes are saved locally. Please sign up to save to your account.');
+        return;
+      }
       toast.info('Saving your resume...');
       try {
         await api.put('/resumes/my-resume', values);
@@ -61,10 +83,14 @@ export default function DashboardPage() {
         toast.error('Failed to save resume. Please try again.');
       }
     },
-    [clearDraft]
+    [clearDraft, isGuest]
   );
 
   const handleDownload = useCallback(async () => {
+    if (isGuest) {
+        toast.error("Please create an account to download your resume.");
+        return;
+    }
     await form.handleSubmit(onSubmit)();
     toast.info('Generating your PDF...');
     try {
@@ -85,15 +111,15 @@ export default function DashboardPage() {
     } catch {
       toast.error('Failed to download PDF.');
     }
-  }, [form, onSubmit]);
+  }, [form, onSubmit, isGuest]);
 
   useEffect(() => {
     if (isAuthLoading) return;
 
-    if (!user) {
+    if (!user && !isGuest) {
       router.replace('/login');
     }
-  }, [user, isAuthLoading, router]);
+  }, [user, isGuest, isAuthLoading, router]);
 
   useEffect(() => {
     const handleSave = () => {
@@ -122,6 +148,8 @@ export default function DashboardPage() {
       <form onSubmit={form.handleSubmit(onSubmit)}>
         <div className="min-h-screen bg-gray-50">
           <main className="container mx-auto p-4 md:p-8">
+            {/* Conditionally render the alert only for guest users */}
+            {isGuest && <GuestModeAlert />}
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
               <div className="space-y-6">
                 <PersonalInformationForm />
