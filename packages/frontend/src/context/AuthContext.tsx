@@ -21,6 +21,7 @@ interface AuthContextType {
   login: (data: LoginData) => Promise<void>;
   logout: () => void;
   enterGuestMode: () => void;
+  setIsLoading: (isLoading: boolean) => void;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -38,7 +39,10 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       setIsGuest(false);
     } catch {
       setUser(null);
-      setIsGuest(false);
+      const guestStatus = sessionStorage.getItem('isGuest');
+      if (guestStatus === 'true') {
+        setIsGuest(true);
+      }
     } finally {
       setIsLoading(false);
     }
@@ -51,25 +55,20 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const enterGuestMode = () => {
     setUser(null);
     setIsGuest(true);
-    setIsLoading(false); 
+    setIsLoading(false);
   };
 
   const login = async (data: LoginData) => {
-    setIsLoading(true);
-    try {
-      await api.post('/users/login', data);
-      await fetchUser();
-      localStorage.removeItem('resumeDraft');
-    } finally {
-      setIsLoading(false);
-    }
+    await api.post('/users/login', data);
+    await fetchUser();
+    localStorage.removeItem('resumeDraft');
   };
 
   const logout = async () => {
     if (user) {
       localStorage.removeItem(`resumeDraft_${user.id}`);
     } else if (isGuest) {
-        localStorage.removeItem('resumeDraft_guest');
+      localStorage.removeItem('resumeDraft_guest');
     }
     
     await api.post('/users/logout');
@@ -78,7 +77,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   };
 
   return (
-    <AuthContext.Provider value={{ user, isLoading, isGuest, login, logout, enterGuestMode }}>
+    <AuthContext.Provider value={{ user, isLoading, isGuest, login, logout, enterGuestMode, setIsLoading }}>
       {children}
     </AuthContext.Provider>
   );

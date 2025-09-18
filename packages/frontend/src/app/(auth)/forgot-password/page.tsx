@@ -9,12 +9,15 @@ import { Input } from '@/components/ui/input';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import api from '@/lib/api';
 import { toast } from 'sonner';
+import { useState } from 'react';
 
 const formSchema = z.object({
   email: z.string().email({ message: 'Please enter a valid email.' }),
 });
 
 export default function ForgotPasswordPage() {
+  const [isLoading, setIsLoading] = useState(false);
+
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -23,11 +26,15 @@ export default function ForgotPasswordPage() {
   });
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
+    setIsLoading(true);
     try {
       await api.post('/users/request-password-reset', values);
       toast.success('If a user with that email exists, a password reset link has been sent.');
+      form.reset();
     } catch {
       toast.error('An error occurred. Please try again.');
+    } finally {
+      setIsLoading(false);
     }
   }
 
@@ -54,8 +61,8 @@ export default function ForgotPasswordPage() {
                   </FormItem>
                 )}
               />
-              <Button type="submit" className="w-full">
-                Send Reset Link
+              <Button type="submit" className="w-full" disabled={isLoading}>
+                {isLoading ? 'Sending Link...' : 'Send Reset Link'}
               </Button>
             </form>
           </Form>

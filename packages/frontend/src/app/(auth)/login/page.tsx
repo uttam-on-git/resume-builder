@@ -39,6 +39,7 @@ export default function LoginPage() {
   const router = useRouter();
   const { login, enterGuestMode, isLoading } = useAuth();
   const [isSubmitting, setIsSubmitting] = useState(false);
+
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -113,7 +114,7 @@ export default function LoginPage() {
                 </div>
               </div>
               <Button type="submit" className="w-full" disabled={isSubmitting || isLoading}>
-                {isSubmitting || isLoading ? 'Logging in...' : 'Login'}
+                {isSubmitting ? 'Logging in...' : 'Login'}
               </Button>
             </form>
           </Form>
